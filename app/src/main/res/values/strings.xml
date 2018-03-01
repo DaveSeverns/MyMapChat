@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MyMapChat</string>
     <string name="realm_name">users.realm</string>
+    <string name="enter_name_label">Enter Name:</string>
 </resources>
