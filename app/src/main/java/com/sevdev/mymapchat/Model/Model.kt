@@ -9,5 +9,7 @@ object Model {
     data class User(var name : String,
                     var latitude : String,
                     var longitude : String,
-                    var publicKey: PublicKey)
-}
+                    var publicKey: String){
+        constructor() : this("","","","")
+    }
+    }

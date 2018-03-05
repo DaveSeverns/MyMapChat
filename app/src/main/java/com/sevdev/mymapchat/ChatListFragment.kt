@@ -9,7 +9,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import com.sevdev.mymapchat.Adapters.RecyclerAdapter
+import com.sevdev.mymapchat.Model.Model
 import kotlinx.android.synthetic.main.fragment_chat_list.*
 
 
@@ -24,8 +26,8 @@ import kotlinx.android.synthetic.main.fragment_chat_list.*
 class ChatListFragment : Fragment() {
 
     private var layoutManager : RecyclerView.LayoutManager? = null
-    private var adapter : RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
-    private var appContext : Context? = null
+    private var adapter : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>? = null
+    private var users : ArrayList<Model.User> = ArrayList()
 
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
@@ -45,9 +47,9 @@ class ChatListFragment : Fragment() {
                               savedInstanceState: Bundle): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_chat_list, container, false)
-        layoutManager = LinearLayoutManager(appContext)
+        layoutManager = LinearLayoutManager(context,LinearLayout.VERTICAL, false)
         recycler_view.layoutManager = layoutManager
-        adapter = RecyclerAdapter()
+        adapter = RecyclerAdapter(context,users)
         recycler_view.adapter = adapter
         return view
     }
@@ -64,7 +66,6 @@ class ChatListFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             mListener = context
         } else {
-            appContext = context
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
         }
     }
