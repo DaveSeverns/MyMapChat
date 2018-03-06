@@ -17,7 +17,7 @@ class RecyclerAdapter(private val context: Context, private val users: ArrayList
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MyViewHolder {
-        val v = LayoutInflater.from(parent!!.context).inflate(viewType,parent,false)
+        val v = LayoutInflater.from(parent?.context).inflate(viewType,parent,false)
         return MyViewHolder(v)
     }
 

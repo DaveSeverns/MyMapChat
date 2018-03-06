@@ -1,18 +1,20 @@
-package com.sevdev.mymapchat
+package com.sevdev.mymapchat.Controller
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.ColorSpace
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
+import android.widget.Toast.*
 import com.sevdev.mymapchat.Model.Model
+import com.sevdev.mymapchat.R
+import com.sevdev.mymapchat.Utility.LISTENER_LOG_TAG
 import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
@@ -34,27 +36,27 @@ class RegisterActivity : AppCompatActivity() {
                 createdUser.latitude = latitudeAsString
                 createdUser.longitude = longitudeAsString
             }
-            val intent : Intent = Intent(this,ChatActivity::class.java)
+            val intent : Intent = Intent(this, ChatActivity::class.java)
             startActivity(intent)
         }
 
     }
     private val locationListener : LocationListener = object : LocationListener{
         override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            Log.e(LISTENER_LOG_TAG, provider)
         }
 
         override fun onProviderEnabled(provider: String?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            Log.e(LISTENER_LOG_TAG, provider)
         }
 
         override fun onProviderDisabled(provider: String?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            Log.e(LISTENER_LOG_TAG, provider)
         }
 
         override fun onLocationChanged(location: Location?) {
-            latitudeAsString = location!!.latitude.toString()
-            longitudeAsString =  location!!.longitude.toString()
+            latitudeAsString = location?.latitude.toString()
+            longitudeAsString =  location?.longitude.toString()
         }
     }
 
@@ -82,13 +84,13 @@ class RegisterActivity : AppCompatActivity() {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             requestUpdates()
         } else {
-            Toast.makeText(this, "SOL homie", Toast.LENGTH_SHORT).show()
+            makeText(this, "SOL homie", LENGTH_SHORT).show()
             finish()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        locationManager!!.removeUpdates(locationListener)
+        locationManager?.removeUpdates(locationListener)
     }
 }

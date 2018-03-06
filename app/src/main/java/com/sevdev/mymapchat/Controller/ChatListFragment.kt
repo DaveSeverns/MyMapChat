@@ -1,4 +1,4 @@
-package com.sevdev.mymapchat
+package com.sevdev.mymapchat.Controller
 
 import android.content.Context
 import android.net.Uri
@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.sevdev.mymapchat.Adapters.RecyclerAdapter
 import com.sevdev.mymapchat.Model.Model
+import com.sevdev.mymapchat.R
 import kotlinx.android.synthetic.main.fragment_chat_list.*
 
 
@@ -25,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_chat_list.*
  */
 class ChatListFragment : Fragment() {
 
-    private var layoutManager : RecyclerView.LayoutManager? = null
+    private var linearLayoutManager : RecyclerView.LayoutManager? = null
     private var adapter : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>? = null
     private var users : ArrayList<Model.User> = ArrayList()
 
@@ -44,12 +45,12 @@ class ChatListFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle): View? {
+                              savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_chat_list, container, false)
-        layoutManager = LinearLayoutManager(context,LinearLayout.VERTICAL, false)
-        recycler_view.layoutManager = layoutManager
-        adapter = RecyclerAdapter(context,users)
+        linearLayoutManager = LinearLayoutManager(activity)
+        recycler_view.layoutManager = linearLayoutManager
+        adapter = RecyclerAdapter(activity,users)
         recycler_view.adapter = adapter
         return view
     }

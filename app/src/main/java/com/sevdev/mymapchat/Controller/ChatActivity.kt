@@ -1,9 +1,10 @@
-package com.sevdev.mymapchat
+package com.sevdev.mymapchat.Controller
 
 import android.app.FragmentManager
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.sevdev.mymapchat.R
 
 class ChatActivity : AppCompatActivity(), ChatListFragment.OnFragmentInteractionListener {
     override fun onFragmentInteraction(uri: Uri) {
