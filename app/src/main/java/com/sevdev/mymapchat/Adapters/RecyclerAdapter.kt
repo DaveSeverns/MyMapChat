@@ -13,7 +13,7 @@ import com.sevdev.mymapchat.R
 /**
  * Created by davidseverns on 3/4/18.
  */
-class RecyclerAdapter(private val context: Context, private val users: ArrayList<Model.User>) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
+class RecyclerAdapter(private var users : ArrayList<Model.User>) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MyViewHolder {
@@ -40,4 +40,6 @@ class RecyclerAdapter(private val context: Context, private val users: ArrayList
         }
 
     }
+
+
 }
