@@ -12,8 +12,9 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast.*
-import com.sevdev.mymapchat.Model.Model
+import com.sevdev.mymapchat.Model.Partner
 import com.sevdev.mymapchat.R
+import com.sevdev.mymapchat.Utility.INTENT_TAG
 import com.sevdev.mymapchat.Utility.LISTENER_LOG_TAG
 import kotlinx.android.synthetic.main.activity_register.*
 
@@ -22,6 +23,7 @@ class RegisterActivity : AppCompatActivity() {
     private var locationManager : LocationManager? = null
     private var latitudeAsString : String = ""
     private var longitudeAsString : String = ""
+    lateinit var partner: Partner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,14 +31,14 @@ class RegisterActivity : AppCompatActivity() {
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         //initialize the Realm db
-        var createdUser = Model.User()
+
         enter_name_button.setOnClickListener{
             if(enterName.text != null){
-                createdUser.name = enterName.text.toString()
-                createdUser.latitude = latitudeAsString
-                createdUser.longitude = longitudeAsString
+                partner = Partner(enterName.text.toString(),latitudeAsString,longitudeAsString)
+
             }
             val intent : Intent = Intent(this, ChatActivity::class.java)
+            intent.putExtra(INTENT_TAG,partner)
             startActivity(intent)
         }
 
