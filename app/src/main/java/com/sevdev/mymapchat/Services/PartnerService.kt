@@ -5,10 +5,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import com.sevdev.mymapchat.Model.Partner
-import com.sevdev.mymapchat.Utility.GET_URL
-import com.sevdev.mymapchat.Utility.LATITUDE
-import com.sevdev.mymapchat.Utility.LONGITUDE
-import com.sevdev.mymapchat.Utility.USER_NAME
+import com.sevdev.mymapchat.Utility.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedInputStream
@@ -29,7 +26,7 @@ class PartnerService : Service() {
     class localBinder : Binder()
 
     fun getPartnerList(): ArrayList<Partner>{
-        val apiResponse = URL(GET_URL)
+        val apiResponse = URL(BASE_URL)
         var partners = ArrayList<Partner>()
         val jsonArray : JSONArray = JSONArray(apiResponse)
 

@@ -35,7 +35,7 @@ class RecyclerAdapter(val partners : ArrayList<Partner>, val context: Context) :
         val userText = itemView?.findViewById<TextView>(R.id.user_text)
 
         fun bindPartner(partner : Partner, context : Context){
-            userText?.text = partner.name
+            userText?.text = partner.username
         }
 
     }

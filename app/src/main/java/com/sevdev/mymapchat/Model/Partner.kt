@@ -6,7 +6,7 @@ import android.os.Parcelable
 /**
  * Created by davidseverns on 3/7/18.
  */
-class Partner(val name:String?, val lat :String?,val lng:String?): Parcelable {
+class Partner(val username:String?, val latitude :String?,val longitude:String?): Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readString(),
@@ -14,9 +14,9 @@ class Partner(val name:String?, val lat :String?,val lng:String?): Parcelable {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(name)
-        parcel.writeString(lat)
-        parcel.writeString(lng)
+        parcel.writeString(username)
+        parcel.writeString(latitude)
+        parcel.writeString(longitude)
     }
 
     override fun describeContents(): Int {
