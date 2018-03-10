@@ -32,39 +32,45 @@ class ChatActivity : AppCompatActivity() {
     lateinit var  defaultPartners: ArrayList<Partner>
     lateinit var adapter: RecyclerAdapter
     lateinit var partners : ArrayList<Partner>
+    lateinit var networkManager : NetworkManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+        networkManager = NetworkManager(this)
         val layoutManager = LinearLayoutManager(this)
         var partner = Partner("Jim","69","69")
         var partnerFromActivity = intent.getParcelableExtra<Partner>(INTENT_TAG)
         partners = ArrayList()
+        adapter = RecyclerAdapter(partners,this)
         defaultPartners = ArrayList()
         defaultPartners.add(partner)
         defaultPartners.add(partnerFromActivity)
 
-        val gson = GsonBuilder().create()
-        val builder = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create(gson))
-        val retrofit = builder.build()
-        val client = retrofit.create(KaMorrisClient::class.java)
-        val call = client.getPartnerList()
-        Log.e(ERROR_HERE_TAG, call.toString())
-        call.enqueue(object : Callback<ArrayList<Partner>>{
-            override fun onResponse(call: Call<ArrayList<Partner>>?, response: retrofit2.Response<ArrayList<Partner>>?) {
-                Log.e(ERROR_HERE_TAG,"onResponse")
-                partners.addAll( response!!.body()!!)
-                adapter.notifyDataSetChanged()
-                println(partners?.get(0)?.username)
-            }
+        val tempList = networkManager.getPartnerListNetwork(adapter)
+        partners.addAll(tempList)
 
-            override fun onFailure(call: Call<ArrayList<Partner>>?, t: Throwable?) {
-                Log.e(ERROR_HERE_TAG, "onFailure")
-            }
-        })
+        //val gson = GsonBuilder().create()
+        //val builder = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create(gson))
+        //val retrofit = builder.build()
+        //val client = retrofit.create(KaMorrisClient::class.java)
+        //val call = client.getPartnerList()
+        //Log.e(ERROR_HERE_TAG, call.toString())
+        //call.enqueue(object : Callback<ArrayList<Partner>>{
+        //    override fun onResponse(call: Call<ArrayList<Partner>>?, response: retrofit2.Response<ArrayList<Partner>>?) {
+        //        Log.e(ERROR_HERE_TAG,"onResponse")
+        //        partners.addAll( response!!.body()!!)
+        //        adapter.notifyDataSetChanged()
+        //        println(partners?.get(0)?.username)
+        //    }
+//
+        //    override fun onFailure(call: Call<ArrayList<Partner>>?, t: Throwable?) {
+        //        Log.e(ERROR_HERE_TAG, "onFailure")
+        //    }
+        //})
 
-        if(call != null){
+        if(0 != null){
             adapter = RecyclerAdapter(partners,this)
 
         }

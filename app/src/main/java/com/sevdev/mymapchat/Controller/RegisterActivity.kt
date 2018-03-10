@@ -14,8 +14,10 @@ import android.util.Log
 import android.widget.Toast.*
 import com.sevdev.mymapchat.Model.Partner
 import com.sevdev.mymapchat.R
+import com.sevdev.mymapchat.Utility.ERROR_HERE_TAG
 import com.sevdev.mymapchat.Utility.INTENT_TAG
 import com.sevdev.mymapchat.Utility.LISTENER_LOG_TAG
+import com.sevdev.mymapchat.Utility.NetworkManager
 import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
@@ -24,10 +26,13 @@ class RegisterActivity : AppCompatActivity() {
     private var latitudeAsString : String = ""
     private var longitudeAsString : String = ""
     lateinit var partner: Partner
+    private var networkManager : NetworkManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+        networkManager = NetworkManager(this)
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         //initialize the Realm db
@@ -39,6 +44,8 @@ class RegisterActivity : AppCompatActivity() {
             }
             val intent : Intent = Intent(this, ChatActivity::class.java)
             intent.putExtra(INTENT_TAG,partner)
+            val call = networkManager?.postPartnerToServer(partner)
+            Log.e(ERROR_HERE_TAG, call.toString())
             startActivity(intent)
         }
 
