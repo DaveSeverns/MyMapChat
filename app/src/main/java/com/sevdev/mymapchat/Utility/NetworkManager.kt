@@ -16,31 +16,19 @@ import retrofit2.converter.gson.GsonConverterFactory
  * Created by davidseverns on 3/8/18.
  */
 class NetworkManager(context: Context) {
-    fun networkCall(): KaMorrisClient{
-        val gson = GsonBuilder().create()
-        val builder = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create(gson))
-        val retrofit = builder.build()
-        val client = retrofit.create(KaMorrisClient::class.java)
-        return client
+
+    companion object {
+        fun networkCall(): KaMorrisClient{
+            val gson = GsonBuilder().create()
+            val builder = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create(gson))
+            val retrofit = builder.build()
+            val client = retrofit.create(KaMorrisClient::class.java)
+            return client
+        }
     }
 
-    fun getPartnerListNetwork(adapter: RecyclerAdapter): ArrayList<Partner>{
-        val call = networkCall().getPartnerList()
-        val partners = ArrayList<Partner>()
-        call.enqueue(object : Callback<ArrayList<Partner>> {
-            override fun onResponse(call: Call<ArrayList<Partner>>?, response: retrofit2.Response<ArrayList<Partner>>?) {
-                partners.addAll( response!!.body()!!)
-                adapter.notifyDataSetChanged()
-                println(partners?.get(0)?.username)
-            }
 
-            override fun onFailure(call: Call<ArrayList<Partner>>?, t: Throwable?) {
-                Log.e(ERROR_HERE_TAG, "onFailure")
-            }
-        })
 
-        return partners
-    }
 
     fun postPartnerToServer(partner: Partner){
         val call = networkCall().addPartnerToList(partner.username,partner.latitude,partner.longitude)
