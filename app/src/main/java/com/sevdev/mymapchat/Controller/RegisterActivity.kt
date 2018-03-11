@@ -49,6 +49,11 @@ class RegisterActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        skipButton.setOnClickListener {
+            val skipIntent = Intent(this, ChatActivity::class.java)
+            startActivity(skipIntent)
+        }
+
     }
     private val locationListener : LocationListener = object : LocationListener{
         override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.sevdev.mymapchat.Model.Partner
 import com.sevdev.mymapchat.R
 import com.sevdev.mymapchat.Utility.ERROR_HERE_TAG
 import com.sevdev.mymapchat.Utility.NetworkManager
+import kotlinx.android.synthetic.main.fragment_partner_list.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,7 +29,7 @@ import retrofit2.Response
 class PartnerListFragment : Fragment() {
 
     lateinit var adapter : RecyclerAdapter
-    private var partnerList : ArrayList<Partner>? = null
+    private var partnerList : ArrayList<Partner> = ArrayList<Partner>()
 
     private var mListener: OnFragmentInteractionListener? = null
 
@@ -35,7 +37,14 @@ class PartnerListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_partner_list, container, false)
+        val view  = inflater.inflate(R.layout.fragment_partner_list, container, false)
+        val layoutManager =  LinearLayoutManager(activity)
+        recycler_view.layoutManager = layoutManager
+        recycler_view.setHasFixedSize(true)
+        adapter = RecyclerAdapter(partnerList,activity)
+        recycler_view.adapter = adapter
+
+        return view
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -73,9 +82,8 @@ class PartnerListFragment : Fragment() {
         fun onFragmentInteraction(uri: Uri)
     }
 
-    fun getPartnerListNetwork(adapter: RecyclerAdapter): ArrayList<Partner>{
+    fun getPartnerListNetwork(adapter: RecyclerAdapter, partners : ArrayList<Partner>){
         val call = NetworkManager.networkCall().getPartnerList()
-        val partners = ArrayList<Partner>()
         call.enqueue(object : Callback<ArrayList<Partner>> {
             override fun onResponse(call: Call<ArrayList<Partner>>?, response: Response<ArrayList<Partner>>?) {
                 partners.addAll( response!!.body()!!)
@@ -88,6 +96,10 @@ class PartnerListFragment : Fragment() {
             }
         })
 
-        return partners
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getPartnerListNetwork(adapter, partnerList)
     }
 }// Required empty public constructor
