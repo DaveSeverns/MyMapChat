@@ -30,6 +30,11 @@
             android:name=".Services.PartnerService"
             android:enabled="true"
             android:exported="true"></service>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDunfHA3N5NSPRzTVv-tCJwDwA8XsEoV48"
+            />
     </application>
 
 </manifest>

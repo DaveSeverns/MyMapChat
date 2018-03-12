@@ -27,13 +27,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.URL
 
-class ChatActivity : AppCompatActivity(), PartnerListFragment.OnFragmentInteractionListener {
+class ChatActivity : AppCompatActivity(), PartnerListFragment.OnParnterListFragmentInteractionListener, PartnerMapFragment.OnMapFragmentInteractionListener {
     override fun onFragmentInteraction(uri: Uri) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 
     private lateinit var partnerListFragment: PartnerListFragment
+    private lateinit var mapFragment : PartnerMapFragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +42,7 @@ class ChatActivity : AppCompatActivity(), PartnerListFragment.OnFragmentInteract
         setContentView(R.layout.activity_chat)
 
         partnerListFragment = PartnerListFragment()
+        mapFragment = PartnerMapFragment()
 
         val fragTransaction = fragmentManager.beginTransaction()
         fragTransaction.replace(R.id.single_pane_frame, partnerListFragment).commit()
@@ -48,7 +50,11 @@ class ChatActivity : AppCompatActivity(), PartnerListFragment.OnFragmentInteract
 
     }
 
-
+    override fun itemClicked(partner: String?) {
+        val mapTransaction = fragmentManager.beginTransaction()
+        mapTransaction.replace(R.id.single_pane_frame, mapFragment).addToBackStack(null).commit()
+        fragmentManager.executePendingTransactions()
+    }
 
 
 }

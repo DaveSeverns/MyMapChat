@@ -13,11 +13,14 @@ import com.sevdev.mymapchat.R
 /**
  * Created by davidseverns on 3/4/18.
  */
-class RecyclerAdapter(val partners : ArrayList<Partner>, val context: Context) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
+class RecyclerAdapter(val partners : ArrayList<Partner>,  private val clickListener: ClickListener) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
 
+    interface ClickListener{
+        fun listItemClicked(partner: Partner)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MyViewHolder {
-        val v = LayoutInflater.from(context).inflate(R.layout.user_card_layout,parent,false)
+        val v = LayoutInflater.from(parent?.context).inflate(R.layout.user_card_layout,parent,false)
         return MyViewHolder(v)
     }
 
@@ -26,16 +29,17 @@ class RecyclerAdapter(val partners : ArrayList<Partner>, val context: Context) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder?, position: Int) {
-        holder?.bindPartner(partners[position],context)
+        holder?.bindPartner(partners[position], clickListener = clickListener)
     }
 
 
-    inner class MyViewHolder(itemView: View?): RecyclerView.ViewHolder(itemView){
+    class MyViewHolder(itemView: View?): RecyclerView.ViewHolder(itemView){
         val userImage = itemView?.findViewById<ImageView>(R.id.user_picture)
         val userText = itemView?.findViewById<TextView>(R.id.user_text)
 
-        fun bindPartner(partner : Partner, context : Context){
+        fun bindPartner(partner : Partner, clickListener: ClickListener){
             userText?.text = partner.username
+            itemView.setOnClickListener { clickListener.listItemClicked(partner) }
         }
 
     }

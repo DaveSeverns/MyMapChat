@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -26,25 +27,41 @@ import retrofit2.Response
  * [PartnerListFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
  */
-class PartnerListFragment : Fragment() {
+class PartnerListFragment : Fragment(), RecyclerAdapter.ClickListener {
+    override fun listItemClicked(partner: Partner) {
+        mListener?.itemClicked(partner.username)
+    }
 
     lateinit var adapter : RecyclerAdapter
     private var partnerList : ArrayList<Partner> = ArrayList<Partner>()
+    private var layoutManager : RecyclerView.LayoutManager = LinearLayoutManager(activity)
 
-    private var mListener: OnFragmentInteractionListener? = null
+    private var mListener: OnParnterListFragmentInteractionListener? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle): View? {
+                              savedInstanceState: Bundle?): View? {
+
+        if (container != null){
+            container.removeAllViews()
+        }
         // Inflate the layout for this fragment
         val view  = inflater.inflate(R.layout.fragment_partner_list, container, false)
-        val layoutManager =  LinearLayoutManager(activity)
-        recycler_view.layoutManager = layoutManager
-        recycler_view.setHasFixedSize(true)
-        adapter = RecyclerAdapter(partnerList,activity)
-        recycler_view.adapter = adapter
+
+        adapter = RecyclerAdapter(partnerList,this)
+        getPartnerListNetwork(adapter,partnerList)
+
 
         return view
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        recycler_view.layoutManager = layoutManager
+        //recycler_view.setHasFixedSize(true)
+        recycler_view.adapter = adapter
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -56,7 +73,7 @@ class PartnerListFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnParnterListFragmentInteractionListener) {
             mListener = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
@@ -77,9 +94,9 @@ class PartnerListFragment : Fragment() {
      *
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+    interface OnParnterListFragmentInteractionListener {
         fun onFragmentInteraction(uri: Uri)
+        fun itemClicked(partner : String?)
     }
 
     fun getPartnerListNetwork(adapter: RecyclerAdapter, partners : ArrayList<Partner>){
