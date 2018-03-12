@@ -4,11 +4,17 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.app.Fragment
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.LatLng
 
 import com.sevdev.mymapchat.R
+import kotlinx.android.synthetic.main.fragment_partner_map.*
 
 /**
  * A simple [Fragment] subclass.
@@ -16,23 +22,90 @@ import com.sevdev.mymapchat.R
  * [PartnerMapFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
  */
-class PartnerMapFragment : Fragment() {
+class PartnerMapFragment :Fragment(), OnMapReadyCallback {
+
 
     private var mListener: OnMapFragmentInteractionListener? = null
+    private lateinit var mGoogleMap : GoogleMap
+    private lateinit var locationManager: LocationManager
+    private lateinit var locationListener: LocationListener
+
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        mGoogleMap = googleMap
+    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_partner_map, container, false)
+        val view = inflater.inflate(R.layout.fragment_partner_map, container, false)
+
+        locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0, 0f,locationListener )
+
+        return view
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        if (mListener != null) {
-            mListener!!.onFragmentInteraction(uri)
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        partnerMap.onCreate(savedInstanceState)
+        partnerMap.onResume()
+        partnerMap.getMapAsync(this)
+
+
+        locationListener = object : LocationListener{
+            override fun onLocationChanged(location: Location?) {
+                val latlng = LatLng(location!!.latitude, location!!.longitude)
+                val cameraUpdate : CameraUpdate = CameraUpdateFactory.newLatLngZoom(latlng,16f)
+                mGoogleMap.animateCamera(cameraUpdate)
+            }
+
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onProviderDisabled(provider: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onProviderEnabled(provider: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        partnerMap.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        partnerMap.onStop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        partnerMap.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        partnerMap.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        partnerMap.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        partnerMap.onDestroy()
+    }
+
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -61,4 +134,6 @@ class PartnerMapFragment : Fragment() {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
+
+
 }// Required empty public constructor
