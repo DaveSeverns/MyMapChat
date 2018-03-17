@@ -72,6 +72,8 @@ class RegisterActivity : AppCompatActivity() {
             latitudeAsString = location?.latitude.toString()
             longitudeAsString =  location?.longitude.toString()
         }
+
+
     }
 
     @SuppressLint("MissingPermission")

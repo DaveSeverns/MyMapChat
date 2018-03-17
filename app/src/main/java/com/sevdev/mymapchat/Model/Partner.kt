@@ -6,12 +6,14 @@ import android.os.Parcelable
 /**
  * Created by davidseverns on 3/7/18.
  */
-class Partner(val username:String?, val latitude :String?,val longitude:String?): Parcelable {
+class Partner(val username:String? = "", val latitude :String?= "",val longitude:String? = ""): Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readString(),
             parcel.readString()) {
     }
+
+
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(username)

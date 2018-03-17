@@ -15,3 +15,6 @@ const val POST_ENDPOINT = "/lab/register_location.php"
 const val USER_NAME = "username"
 const val LATITUDE = "latitude"
 const val LONGITUDE = "longitude"
+
+
+const val PARTNER_FILE = "partners.ser"

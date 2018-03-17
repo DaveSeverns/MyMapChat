@@ -4,40 +4,96 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import android.util.Log
 import com.sevdev.mymapchat.Model.Partner
 import com.sevdev.mymapchat.Utility.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedInputStream
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.lang.Exception
 import java.net.URL
 
 class PartnerService : Service() {
 
-    lateinit var iBinder: IBinder
+    private var ioHelper: IOHelper? = null
+    private var serviceThread: ServiceThread? = null
+
+    private val mBinder = LocalBinder()
+
 
     override fun onBind(intent: Intent): IBinder? {
+        ioHelper = IOHelper(applicationContext)
+        serviceThread = ServiceThread()
+        serviceThread!!.start()
 
-        iBinder = localBinder()
-        return iBinder
-        // TODO: Return the communication channel to the service.
-        throw UnsupportedOperationException("Not yet implemented")
+        return mBinder
     }
 
-    class localBinder : Binder()
+    inner class LocalBinder : Binder() {
+        internal val service: PartnerService
+            get() = this@PartnerService
+    }
 
-    fun getPartnerList(): ArrayList<Partner>{
-        val apiResponse = URL(BASE_URL)
-        var partners = ArrayList<Partner>()
-        val jsonArray : JSONArray = JSONArray(apiResponse)
-
-
-        var i: Int= 0
-        while(jsonArray.get(i) != null){
-            var name = jsonArray.getJSONObject(i).getString(USER_NAME)
-            var lat = jsonArray.getJSONObject(i).getString(LATITUDE)
-            var lng = jsonArray.getJSONObject(i).getString(LONGITUDE)
-            partners.add(Partner(name,lat,lng))
+    fun getStockInfo(symbol: String) {
+        val t = object : Thread() {
+            override fun run() {
+                pullJSONFromUrl(symbol)
+            }
         }
-        return partners
+        t.start()
+    }
+
+
+    fun pullJSONFromUrl(username: String): Partner? {
+        val stockJSONURL: URL
+        var tempPartner: Partner? = null
+
+        try {
+            stockJSONURL = URL("http://dev.markitondemand.com/MODApis/Api/v2/Quote/json/?symbol=$symbol")
+            val bufferedReader = BufferedReader(InputStreamReader(stockJSONURL.openStream()))
+            var tempResponse: String?
+            var response = ""
+
+            tempResponse = bufferedReader.readLine()
+            while (tempResponse != null) {
+                response = response + tempResponse
+                tempResponse = bufferedReader.readLine()
+            }
+
+            val partnerObject = JSONObject(response)
+            tempPartner = Partner(partnerObject)
+
+
+        } catch (e: Exception) {
+            Log.e("Error", "Error grabbing partners")
+            e.printStackTrace()
+        }
+
+        return tempPartner
+    }
+
+    private inner class ServiceThread : Thread() {
+        override fun run() {
+            super.run()
+            while (true) {
+                val threadMap = ioHelper!!.readFromFile()
+                if (threadMap != null) {
+                    for (entry in threadMap.entries) {
+                        ioHelper!!.savePartnerToFile(pullJSONFromUrl(entry.key))
+                        try {
+                            Log.d("ServiceThread Ran", threadMap.toString())
+                            sleep(60000)
+
+                        } catch (e: InterruptedException) {
+                            e.printStackTrace()
+                        }
+
+                    }
+                }
+
+            }
+        }
     }
 }
