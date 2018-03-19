@@ -13,13 +13,13 @@ import java.util.HashMap
 class IOHelper(var context: Context) {
 
 
-    val listOfPartners: ArrayList<String>
+    val listOfPartners: ArrayList<Partner>
         get() {
-            val partnerList = ArrayList<String>()
+            var partnerList = ArrayList<Partner>()
             val mapToParse = readFromFile()
 
             for (partner in mapToParse) {
-                partnerList.add(partner.value.username.toString())
+                partnerList.add(partner.value)
             }
             return partnerList
         }
@@ -44,11 +44,13 @@ class IOHelper(var context: Context) {
         return partnerMap
     }
 
-    fun savePartnerToFile(partner: Partner): Boolean {
+    fun savePartnersToFile(partners: ArrayList<Partner>): Boolean {
         var saved = false
         //TODO if this fails add the load back in.
         val tempMap = readFromFile()
-        tempMap[partner.username.toString()] = partner
+        for(partner in partners){
+            tempMap[partner.username.toString()] = partner
+        }
         val fos: FileOutputStream
         try {
             fos = context.openFileOutput(PARTNER_FILE, Context.MODE_PRIVATE)

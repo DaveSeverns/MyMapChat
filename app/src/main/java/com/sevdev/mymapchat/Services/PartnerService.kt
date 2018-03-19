@@ -5,10 +5,14 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import com.sevdev.mymapchat.Adapters.RecyclerAdapter
 import com.sevdev.mymapchat.Model.Partner
 import com.sevdev.mymapchat.Utility.*
 import org.json.JSONArray
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.BufferedInputStream
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -39,40 +43,29 @@ class PartnerService : Service() {
     fun getStockInfo(symbol: String) {
         val t = object : Thread() {
             override fun run() {
-                pullJSONFromUrl(symbol)
+                pullJSONPartnersFromUrl()
             }
         }
         t.start()
     }
 
 
-    fun pullJSONFromUrl(username: String): Partner? {
-        val stockJSONURL: URL
-        var tempPartner: Partner? = null
+    fun pullJSONPartnersFromUrl(): ArrayList<Partner> {
+            val call = NetworkManager.networkCall().getPartnerList()
+            var partners = ArrayList<Partner>()
+            call.enqueue(object : Callback<ArrayList<Partner>> {
+                override fun onResponse(call: Call<ArrayList<Partner>>?, response: Response<ArrayList<Partner>>?) {
+                    partners.addAll( response!!.body()!!)
+                    println(partners?.get(0)?.username)
+                }
 
-        try {
-            stockJSONURL = URL("http://dev.markitondemand.com/MODApis/Api/v2/Quote/json/?symbol=$symbol")
-            val bufferedReader = BufferedReader(InputStreamReader(stockJSONURL.openStream()))
-            var tempResponse: String?
-            var response = ""
-
-            tempResponse = bufferedReader.readLine()
-            while (tempResponse != null) {
-                response = response + tempResponse
-                tempResponse = bufferedReader.readLine()
-            }
-
-            val partnerObject = JSONObject(response)
-            tempPartner = Partner(partnerObject)
-
-
-        } catch (e: Exception) {
-            Log.e("Error", "Error grabbing partners")
-            e.printStackTrace()
+                override fun onFailure(call: Call<ArrayList<Partner>>?, t: Throwable?) {
+                    Log.e(ERROR_HERE_TAG, "onFailure")
+                }
+            })
+            return partners
         }
 
-        return tempPartner
-    }
 
     private inner class ServiceThread : Thread() {
         override fun run() {
@@ -81,10 +74,10 @@ class PartnerService : Service() {
                 val threadMap = ioHelper!!.readFromFile()
                 if (threadMap != null) {
                     for (entry in threadMap.entries) {
-                        ioHelper!!.savePartnerToFile(pullJSONFromUrl(entry.key))
+                        ioHelper!!.savePartnersToFile(pullJSONPartnersFromUrl())
                         try {
                             Log.d("ServiceThread Ran", threadMap.toString())
-                            sleep(60000)
+                            sleep(30000)
 
                         } catch (e: InterruptedException) {
                             e.printStackTrace()

@@ -2,11 +2,12 @@ package com.sevdev.mymapchat.Model
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.io.Serializable
 
 /**
  * Created by davidseverns on 3/7/18.
  */
-class Partner(val username:String? = "", val latitude :String?= "",val longitude:String? = ""): Parcelable {
+class Partner(val username:String? = "", val latitude :String?= "",val longitude:String? = ""): Parcelable, Serializable {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readString(),

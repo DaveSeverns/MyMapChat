@@ -15,6 +15,7 @@ import com.sevdev.mymapchat.Model.Partner
 
 import com.sevdev.mymapchat.R
 import com.sevdev.mymapchat.Utility.ERROR_HERE_TAG
+import com.sevdev.mymapchat.Utility.IOHelper
 import com.sevdev.mymapchat.Utility.NetworkManager
 import kotlinx.android.synthetic.main.fragment_partner_list.*
 import retrofit2.Call
@@ -32,9 +33,12 @@ class PartnerListFragment : Fragment(), RecyclerAdapter.ClickListener {
         mListener?.itemClicked(partner.username)
     }
 
-    lateinit var adapter : RecyclerAdapter
+    private lateinit var adapter : RecyclerAdapter
+    internal lateinit var view: View
     private var partnerList : ArrayList<Partner> = ArrayList<Partner>()
     private var layoutManager : RecyclerView.LayoutManager = LinearLayoutManager(activity)
+    private lateinit var ioHelper: IOHelper
+    private lateinit var recyclerView: RecyclerView
 
     private var mListener: OnParnterListFragmentInteractionListener? = null
 
@@ -42,27 +46,27 @@ class PartnerListFragment : Fragment(), RecyclerAdapter.ClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        if (container != null){
-            container.removeAllViews()
-        }
+
+        container?.removeAllViews()
+
+        ioHelper = IOHelper(activity)
+
         // Inflate the layout for this fragment
-        val view  = inflater.inflate(R.layout.fragment_partner_list, container, false)
+        view  = inflater.inflate(R.layout.fragment_partner_list, container, false)
+        recyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
+        partnerList = ioHelper.listOfPartners
 
         adapter = RecyclerAdapter(partnerList,this)
-        getPartnerListNetwork(adapter,partnerList)
+
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = layoutManager
+
 
 
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
-        recycler_view.layoutManager = layoutManager
-        //recycler_view.setHasFixedSize(true)
-        recycler_view.adapter = adapter
-
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
@@ -99,24 +103,14 @@ class PartnerListFragment : Fragment(), RecyclerAdapter.ClickListener {
         fun itemClicked(partner : String?)
     }
 
-    fun getPartnerListNetwork(adapter: RecyclerAdapter, partners : ArrayList<Partner>){
-        val call = NetworkManager.networkCall().getPartnerList()
-        call.enqueue(object : Callback<ArrayList<Partner>> {
-            override fun onResponse(call: Call<ArrayList<Partner>>?, response: Response<ArrayList<Partner>>?) {
-                partners.addAll( response!!.body()!!)
-                adapter.notifyDataSetChanged()
-                println(partners?.get(0)?.username)
-            }
-
-            override fun onFailure(call: Call<ArrayList<Partner>>?, t: Throwable?) {
-                Log.e(ERROR_HERE_TAG, "onFailure")
-            }
-        })
-
+    fun addPartnersToList(partners: ArrayList<Partner>){
+        partnerList.addAll(partners)
+        adapter.notifyDataSetChanged()
     }
 
-    override fun onResume() {
-        super.onResume()
-        getPartnerListNetwork(adapter, partnerList)
-    }
+
+
+
+
+
 }// Required empty public constructor
