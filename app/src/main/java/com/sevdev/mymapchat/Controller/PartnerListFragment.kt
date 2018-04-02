@@ -15,7 +15,6 @@ import com.sevdev.mymapchat.Model.Partner
 
 import com.sevdev.mymapchat.R
 import com.sevdev.mymapchat.Utility.ERROR_HERE_TAG
-import com.sevdev.mymapchat.Utility.IOHelper
 import com.sevdev.mymapchat.Utility.NetworkManager
 import kotlinx.android.synthetic.main.fragment_partner_list.*
 import retrofit2.Call
@@ -37,7 +36,6 @@ class PartnerListFragment : Fragment(), RecyclerAdapter.ClickListener {
     internal lateinit var view: View
     private var partnerList : ArrayList<Partner> = ArrayList<Partner>()
     private var layoutManager : RecyclerView.LayoutManager = LinearLayoutManager(activity)
-    private lateinit var ioHelper: IOHelper
     private lateinit var recyclerView: RecyclerView
 
     private var mListener: OnParnterListFragmentInteractionListener? = null
@@ -49,12 +47,10 @@ class PartnerListFragment : Fragment(), RecyclerAdapter.ClickListener {
 
         container?.removeAllViews()
 
-        ioHelper = IOHelper(activity)
 
         // Inflate the layout for this fragment
         view  = inflater.inflate(R.layout.fragment_partner_list, container, false)
         recyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
-        partnerList = ioHelper.listOfPartners
 
         adapter = RecyclerAdapter(partnerList,this)
 
@@ -103,7 +99,7 @@ class PartnerListFragment : Fragment(), RecyclerAdapter.ClickListener {
         fun itemClicked(partner : String?)
     }
 
-    fun addPartnersToList(partners: ArrayList<Partner>){
+    open fun addPartnersToList(partners: ArrayList<Partner>){
         partnerList.addAll(partners)
         adapter.notifyDataSetChanged()
     }

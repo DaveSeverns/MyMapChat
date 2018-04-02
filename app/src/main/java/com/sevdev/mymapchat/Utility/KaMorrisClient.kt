@@ -1,6 +1,7 @@
 package com.sevdev.mymapchat.Utility
 
 import com.sevdev.mymapchat.Model.Partner
+import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -11,7 +12,7 @@ interface KaMorrisClient {
 
     //Endpoint to make the the get request on
     @GET(GET_ENDPOINT)
-    fun getPartnerList(): Call<ArrayList<Partner>>
+    fun getPartnerList(): Observable<ArrayList<Partner>>
 
     @POST(POST_ENDPOINT)
     @FormUrlEncoded
