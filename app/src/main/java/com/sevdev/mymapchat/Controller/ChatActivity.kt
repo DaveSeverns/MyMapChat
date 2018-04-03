@@ -46,9 +46,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 class ChatActivity : AppCompatActivity(), PartnerListFragment.OnParnterListFragmentInteractionListener, PartnerMap.MapFragmentInterface {
-    override fun getSortedPartnersListForMap() {
+    override fun getSortedPartnersListForMap(): ArrayList<Partner> {
+        return mArrayListOfPartners
     }
 
     override fun onFragmentInteraction(uri: Uri) {
@@ -89,18 +91,21 @@ class ChatActivity : AppCompatActivity(), PartnerListFragment.OnParnterListFragm
     }
 
     override fun itemClicked(partner: String?) {
-        val mapTransaction = fragmentManager.beginTransaction()
-        mapTransaction.replace(R.id.single_pane_frame, mapFragment).addToBackStack(null).commit()
-        fragmentManager.executePendingTransactions()
+        val messengerIntent = Intent(this,MessengerActivity::class.java)
+        messengerIntent.putExtra("username",partner)
+        startActivity(messengerIntent)
     }
 
     fun addPartner(view: View){
         grabLocation()
+        val preferences = this.getSharedPreferences("edu.temple.mapchat.USER",Context.MODE_PRIVATE)
+        val editor = preferences.edit()
         val editText = EditText(this)
         val builder = AlertDialog.Builder(this)
                 .setTitle("Username:").setView(editText)
         builder.setPositiveButton("Add", DialogInterface.OnClickListener{dialog, which ->
             val user = editText.text
+            editor.putString("username",user.toString())
             val partner = Partner(user.toString(),currentLocation?.latitude.toString(),currentLocation?.longitude.toString(),0f)
             mNetworkManager.postPartnerToServer(partner)
         })
@@ -154,9 +159,14 @@ class ChatActivity : AppCompatActivity(), PartnerListFragment.OnParnterListFragm
                 .observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
                 .subscribe({partnerList ->
                     partnerListFragment.addPartnersToList(partnerList)
-                    mapFragment.markersToMap(partnerList)
+                    mArrayListOfPartners.addAll(partnerList)
                     Log.e("Observable Ran", " See you again in 30 seconds")
                 })
+    }
+
+    //Static reference to my list of parters can be updated and sent between the fragments
+    companion object {
+        var mArrayListOfPartners = ArrayList<Partner>()
     }
 
 

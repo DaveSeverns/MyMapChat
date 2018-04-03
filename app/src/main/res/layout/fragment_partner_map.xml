@@ -6,10 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".Controller.PartnerMap">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/map_view"
+    <fragment
+        android:id="@+id/contactFrag_F_map"
+        android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </fragment>
+
 </FrameLayout>

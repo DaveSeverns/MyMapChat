@@ -25,6 +25,7 @@ class PartnerMap : MapFragment(), OnMapReadyCallback {
 
     private lateinit var mMapFragmentInterface: MapFragmentInterface
     private  var mMapView: MapView? = null
+    private var mParnters : ArrayList<Partner>? = null
 
     override fun onMapReady(googleMap: GoogleMap?) {
         val templeU = LatLng(39.9813235,-75.1541054)
@@ -33,7 +34,7 @@ class PartnerMap : MapFragment(), OnMapReadyCallback {
     }
 
     interface MapFragmentInterface{
-        fun getSortedPartnersListForMap()
+        fun getSortedPartnersListForMap():ArrayList<Partner>
     }
 
     companion object {
@@ -60,20 +61,29 @@ class PartnerMap : MapFragment(), OnMapReadyCallback {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_partner_map, container, false)
+        val mapFragment = childFragmentManager.findFragmentById(R.id.contactFrag_F_map) as MapFragment
+        mapFragment.getMapAsync(this)
         mMapView = view?.findViewById<MapView>(R.id.map_view)!!
         mMapView?.onCreate(savedInstanceState)
+        mParnters = mMapFragmentInterface.getSortedPartnersListForMap()
+        markersToMap(mParnters)
         return view
     }
 
-    fun markersToMap(partnerMarkers: ArrayList<Partner>){
-        Log.e("Map Marker", partnerMarkers.toString())
-        mMapView?.getMapAsync {
-            for (user in partnerMarkers){
-                val markerOptions = MarkerOptions()
-                it.addMarker(markerOptions.position(LatLng(user.latitude!!.toDouble(),user.longitude!!.toDouble())))
+    fun markersToMap(partnerMarkers: ArrayList<Partner>?){
+        if (partnerMarkers != null){
+            mMapView?.getMapAsync {
+                for (user in partnerMarkers){
+                    val markerOptions = MarkerOptions()
+                    it.addMarker(markerOptions.position(LatLng(user.latitude!!.toDouble(),user.longitude!!.toDouble())))
+                }
             }
         }
+        Log.e("Map Marker", partnerMarkers.toString())
+
     }
+
+
 
 
     override fun onLowMemory() {
@@ -83,6 +93,7 @@ class PartnerMap : MapFragment(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
+
         mMapView?.onStart()
     }
 
@@ -115,4 +126,6 @@ class PartnerMap : MapFragment(), OnMapReadyCallback {
         super.onDestroy()
         mMapView?.onDestroy()
     }
+
+
 }
