@@ -7,7 +7,7 @@ import java.io.Serializable
 /**
  * Created by davidseverns on 3/7/18.
  */
-class Partner(val username:String? = "", val latitude :Double?= null,val longitude:Double? = null, var distanceTo: Float): Parcelable,
+class Partner(val username:String? = "", val latitude :String?= null,val longitude:String? = null, var distanceTo: Float):
         Serializable,
         Comparable<Partner> {
 
@@ -19,33 +19,5 @@ class Partner(val username:String? = "", val latitude :Double?= null,val longitu
         distanceTo > other.distanceTo -> 1
         //if they are equal
         else -> 0
-    }
-
-    constructor(parcel: Parcel) : this(
-            parcel.readString(),
-            parcel.readDouble(),
-            parcel.readDouble(),
-            parcel.readFloat())
-
-
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(username)
-        parcel.writeDouble(latitude!!)
-        parcel.writeDouble(longitude!!)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Partner> {
-        override fun createFromParcel(parcel: Parcel): Partner {
-            return Partner(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Partner?> {
-            return arrayOfNulls(size)
-        }
     }
 }

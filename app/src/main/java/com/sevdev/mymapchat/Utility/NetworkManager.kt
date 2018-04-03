@@ -23,8 +23,10 @@ class NetworkManager() {
 
     companion object {
         fun networkCall(): KaMorrisClient{
-            val gson = GsonBuilder().create()
-            val builder = Retrofit.Builder().baseUrl(BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).addConverterFactory(GsonConverterFactory.create(gson))
+
+            val builder = Retrofit.Builder()
+                    .baseUrl(BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
             val retrofit = builder.build()
             val client = retrofit.create(KaMorrisClient::class.java)
             return client

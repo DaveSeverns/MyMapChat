@@ -18,3 +18,9 @@ const val LONGITUDE = "longitude"
 
 
 const val PARTNER_FILE = "partners.ser"
+
+
+const val DEFAULT_USERNAME = "Not Karl"
+
+
+const val TOKEN_POST = "lab/fcm_register.php"

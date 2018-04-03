@@ -101,7 +101,7 @@ class ChatActivity : AppCompatActivity(), PartnerListFragment.OnParnterListFragm
                 .setTitle("Username:").setView(editText)
         builder.setPositiveButton("Add", DialogInterface.OnClickListener{dialog, which ->
             val user = editText.text
-            val partner = Partner(user.toString(),currentLocation?.latitude,currentLocation?.longitude,0f)
+            val partner = Partner(user.toString(),currentLocation?.latitude.toString(),currentLocation?.longitude.toString(),0f)
             mNetworkManager.postPartnerToServer(partner)
         })
 

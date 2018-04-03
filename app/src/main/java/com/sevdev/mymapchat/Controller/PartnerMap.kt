@@ -70,7 +70,7 @@ class PartnerMap : MapFragment(), OnMapReadyCallback {
         mMapView?.getMapAsync {
             for (user in partnerMarkers){
                 val markerOptions = MarkerOptions()
-                it.addMarker(markerOptions.position(LatLng(user.latitude!!,user.longitude!!)))
+                it.addMarker(markerOptions.position(LatLng(user.latitude!!.toDouble(),user.longitude!!.toDouble())))
             }
         }
     }

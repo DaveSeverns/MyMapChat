@@ -19,4 +19,10 @@ interface KaMorrisClient {
     fun addPartnerToList(@Field("user") userName: String?,
                          @Field("latitude") latitude: String?,
                          @Field("longitude") longitude:String?) : Call<Partner>
+
+    @POST(TOKEN_POST)
+    @FormUrlEncoded
+    fun addTokenToServer(
+            @Field("user") user: String,
+            @Field("token") token: String) : Call<Void>
 }
