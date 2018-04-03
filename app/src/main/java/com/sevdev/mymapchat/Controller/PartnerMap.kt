@@ -50,6 +50,7 @@ class PartnerMap : MapFragment(), OnMapReadyCallback {
 
     override fun onPause() {
         super.onPause()
+        mMapView?.onPause()
     }
 
     override fun setArguments(p0: Bundle?) {
@@ -77,33 +78,41 @@ class PartnerMap : MapFragment(), OnMapReadyCallback {
 
     override fun onLowMemory() {
         super.onLowMemory()
+        mMapView?.onLowMemory()
     }
 
     override fun onStart() {
         super.onStart()
+        mMapView?.onStart()
     }
 
     override fun onResume() {
         super.onResume()
+        mMapView?.onResume()
     }
 
     override fun onSaveInstanceState(p0: Bundle?) {
         super.onSaveInstanceState(p0)
+        mMapView?.onSaveInstanceState(p0)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        mMapView?.onDestroy()
     }
 
     override fun onStop() {
         super.onStop()
+        mMapView?.onStop()
     }
 
     override fun getMapAsync(p0: OnMapReadyCallback?) {
         super.getMapAsync(p0)
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        mMapView?.onDestroy()
     }
 }
