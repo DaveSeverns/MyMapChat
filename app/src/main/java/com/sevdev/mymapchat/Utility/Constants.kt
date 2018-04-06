@@ -17,10 +17,13 @@ const val LATITUDE = "latitude"
 const val LONGITUDE = "longitude"
 
 
-const val PARTNER_FILE = "partners.ser"
+const val PARTNER_FILE = "edu.temple.mapchat.USER"
 
 
 const val DEFAULT_USERNAME = "Not Karl"
 
 
 const val TOKEN_POST = "lab/fcm_register.php"
+
+const val PROVIDER_URI = "content://com.sevdev.mymapchat.keyprovider"
+const val DEF_PARTNER_KEY = "SOL"
